@@ -1,0 +1,24 @@
+package com.flt.service;
+
+import java.util.List;
+
+import com.flt.entity.${className};
+
+public interface I${className}Manager{
+	
+	public ${className} save(${className} entity);
+	
+	public ${className} delete(${className} entity);
+	
+	public ${className} update(${className} entity);
+	
+	public ${className} findById(int id);
+	
+	public List<${className}> findByMultiProperties(String[] properties, Object[] values);
+	
+	public List<${className}> findPagedByMultiProperties(int rowStart, int rowCount, String[] properties, Object[] values);
+	
+	public Long countdByMultiProperties(String[] properties, Object[] values);
+	
+	public void deleteByMultiProperties(String[] properties, Object[] values);
+ }

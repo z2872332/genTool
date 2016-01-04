@@ -1,0 +1,102 @@
+package com.flt.service.impl;
+
+import java.util.List;
+import java.util.logging.Level;
+import javax.ejb.*;
+import com.flt.dao.IGenericDAO;
+import com.flt.service.I${className}Manager;
+import com.flt.utils.LogUtil;
+import com.flt.entity.${className};
+
+@Stateless(name = "${tableName}Manager")
+@Remote(I${className}Manager.class)
+@TransactionManagement(TransactionManagementType.BEAN)
+public class ${className}ManagerImpl implements I${className}Manager{
+
+	@EJB(beanName = "${tableName}DAO")
+	private IGenericDAO<${className}, Integer> dao;
+
+	public ${className} save(${className} entity) {
+		LogUtil.log("saving ${className} instance", Level.INFO, null);
+		try{
+			dao.create(entity);
+			LogUtil.log("save successful", Level.INFO, null);
+			return entity;
+		}catch (RuntimeException re){
+			LogUtil.log("save failed", Level.SEVERE, re);
+			throw re;
+		}
+	}
+
+	public ${className} delete(${className} entity){
+		LogUtil.log("deleting ${className} instance", Level.INFO, null);
+		try{
+			dao.delete(entity);
+			LogUtil.log("delete successful", Level.INFO, null);
+			return entity;
+		}catch (RuntimeException re){
+			LogUtil.log("delete failed", Level.SEVERE, re);
+			throw re;
+		}
+	}
+
+	public ${className} update(${className} entity){
+		LogUtil.log("updating ${className} instance", Level.INFO, null);
+		try{
+			${className} result= dao.update(entity);
+			LogUtil.log("update successful", Level.INFO, null);
+			return result;
+		}catch (RuntimeException re){
+			LogUtil.log("update failed", Level.SEVERE, re);
+			throw re;
+		}
+	}
+
+	public ${className} findById(int id){
+		LogUtil.log("finding ${className} instance with id: "+ id, Level.INFO, null);
+		try{
+			${className} instance= dao.findById(id);
+			return instance;
+		}catch (RuntimeException re){
+			LogUtil.log("find failed", Level.SEVERE, re);
+			throw re;
+		}
+	}
+	
+	public List<${className}> findByMultiProperties(String[] properties, Object[] values) {
+		try{
+			return dao.findByMultiProperties(properties, values);
+		}catch (RuntimeException re){
+			LogUtil.log("findByMultiProperties failed", Level.SEVERE, re);
+			throw re;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<${className}> findPagedByMultiProperties(int rowStart, int rowCount, String[] properties, Object[] values) {
+		try{
+			return dao.findPaged(rowStart, rowCount, properties, values);
+		}catch (RuntimeException re){
+			LogUtil.log("findPagedByMultiProperties failed", Level.SEVERE, re);
+			throw re;
+		}
+	}
+	
+	public Long countdByMultiProperties(String[] properties, Object[] values) {
+		try{
+			return dao.countByProperties(properties, values);
+		}catch (RuntimeException re){
+			LogUtil.log("countdByMultiProperties failed", Level.SEVERE, re);
+			throw re;
+		}
+	}
+	
+	public void deleteByMultiProperties(String[] properties, Object[] values) {
+		try{
+			dao.deleteByMultiProperties(properties, values);
+		}catch (RuntimeException re){
+			LogUtil.log("deleteByMultiProperties failed", Level.SEVERE, re);
+			throw re;
+		}
+	}
+}

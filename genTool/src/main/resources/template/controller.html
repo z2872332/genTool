@@ -1,0 +1,118 @@
+package com.flt.web;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.flt.common.PagesImpl;
+import com.flt.entity.${className};
+import com.flt.service.I${className}Manager;
+
+@Controller
+@RequestMapping("/${tableName}")
+public class ${className}Controller extends BaseController {
+	@Resource protected I${className}Manager ${tableName}Manager;
+	
+	@RequestMapping(value="list")
+	public ModelAndView list(HttpServletRequest request, Integer page <%for(item in fieldList){
+   			if(item.is_search == "1") {
+   				print(", " + item.data_type + " " + item.column_name);
+   			}
+   		}%> ) {
+   		
+   		ModelAndView view = new ModelAndView();
+   		view.addObject("title", "房利通风控系统-${table_comment}");
+   		
+		if(page == null) {
+			page = 1;
+		}
+		
+		<%for(item in fieldList){
+   			if(item.is_search == "1") {
+   				println("\t\tview.addObject(\"" + item.column_name + "\", " + item.column_name + ");");
+   			}
+   		}%>
+		
+		List<String> properties = new ArrayList<String>();
+		List<Object> values = new ArrayList<Object>();
+		<%for(item in fieldList){
+   			if(item.is_search == "1") {
+   				if(item.data_type == "Integer") {%>
+   		if(${item.column_name} != null) {
+			properties.add("${item.column_name}");
+			values.add(${item.column_name});
+		}		
+   				<%}else {%>
+   		if(!StringUtils.isEmpty(${item.column_name})) {
+			properties.add("${item.column_name}");
+			values.add(${item.column_name});
+		}		
+   				<%}
+   			}
+   		}%>
+		
+		String param = "?";
+		for (int i = 0; i < properties.size(); i++) {
+			param += properties.get(i) + "=" + values.get(i) + "&";
+		}
+		view.addObject("list", ${tableName}Manager.findPagedByMultiProperties((page-1)*10, 10, properties.toArray(new String[]{}), values.toArray()));
+		view.addObject("pagesInfo", PagesImpl.pagesInfo(param, page, 10, 
+				${tableName}Manager.countdByMultiProperties(properties.toArray(new String[]{}), values.toArray()).intValue()));
+		view.setViewName("${tableName}/list");
+		return view;
+	}
+	
+	@RequestMapping("/addPage")
+	public ModelAndView addPage(HttpServletRequest request) {
+		ModelAndView view = new ModelAndView();
+		view.addObject("title", "房利通风控系统-${table_comment}");
+		view.setViewName("${tableName}/add");
+		return view;
+	}
+	
+	@RequestMapping("/add")
+	@ResponseBody
+	public Object add(${className} model) {
+		${tableName}Manager.save(model);
+		/*<%for(item in fieldList){
+			if("CURRENT_TIMESTAMP"==item.column_default) {
+				print("model.set"
+				);
+			}
+   		}%>*/
+		return renderSuccess("保存成功");
+	}
+	
+	@RequestMapping("/updatePage")
+	public ModelAndView updatePage(HttpServletRequest request, int id) {
+		ModelAndView view = new ModelAndView();
+		view.addObject("title", "房利通风控系统-${table_comment}");
+		view.setViewName("${tableName}/update");
+		
+		view.addObject("model", ${tableName}Manager.findById(id));
+		return view;
+	}
+	
+	@RequestMapping("/update")
+	@ResponseBody
+	public Object update(${className} model) {
+		${tableName}Manager.update(model);
+		return renderSuccess("更新成功");
+	}
+	
+	@RequestMapping("/delete")
+	@ResponseBody
+	public Object delete(int id) {
+		${className} model = ${tableName}Manager.findById(id);
+		${tableName}Manager.delete(model);
+		return renderSuccess();
+	}
+}

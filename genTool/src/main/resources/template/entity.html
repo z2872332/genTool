@@ -1,0 +1,31 @@
+package com.flt.entity;
+
+import javax.persistence.*;
+
+import static javax.persistence.GenerationType.IDENTITY;
+
+@Entity	
+@Table(name = "${tableName}", catalog = "${catalog}")	
+public class ${className} implements java.io.Serializable {
+
+	<%for(item in fieldList){%>
+	private ${item.data_type} ${item.column_name};
+	<%}%>
+	
+	<%for(item in fieldList){%>
+	<%
+	if(item.column_key=='PRI'){
+		println("	@Id");
+		println("	@GeneratedValue(strategy = IDENTITY)");
+		println("	@Column(name = \"" + item.column_name + "\", unique = true, nullable = false)");
+	}
+	%>
+	public ${item.data_type} get${item.column_name_upper}(){
+		return ${item.column_name};
+	}
+	public void set${item.column_name_upper}(${item.data_type} ${item.column_name}){
+		this.${item.column_name}=${item.column_name};
+	}
+	<%}%>
+
+}

@@ -1,0 +1,29 @@
+package com.flt.dao;
+
+import javax.ejb.*;
+import javax.persistence.*;
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import com.flt.dao.IGenericDAO;
+import com.flt.dao.impl.GenericDAOImpl;
+import com.flt.entity.${className};
+
+@Stateless(name="${tableName}DAO")
+@Local(IGenericDAO.class)
+@TransactionAttribute(REQUIRES_NEW)
+public class ${className}DAO extends GenericDAOImpl<${className}, Integer>{
+	
+	@PersistenceContext(unitName="flt_master")
+	private EntityManager m_em;
+	
+	@PersistenceContext(unitName="flt_slaves")
+	private EntityManager s_em;
+	
+	@Override
+	protected EntityManager getMasterDBEntityManager() {
+		return m_em;
+	}
+	@Override
+	protected EntityManager getSlavesDBEntityManager() {
+		return s_em;
+	}
+}

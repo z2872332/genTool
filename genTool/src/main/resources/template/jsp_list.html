@@ -1,0 +1,76 @@
+\<%@ page language="java" pageEncoding="utf-8"%>
+\<%@ include file="../header.jsp" %>
+\<%@ include file="../header2.jsp" %>
+    <div class="cont h  mb50">
+    	\<%@ include file="../menu.jsp" %>
+        <div class="aside_cont">
+        	<div class="rigbot">
+        		<a href="###" onclick="openWindow('增加', 'addPage', successFun)" class="bottom">添加</a>
+       		</div>
+        	<div class="menu_nav">
+            	<ul>
+                	<li class="sec"><a href="#">${table_comment}</a><span class="borbot"></span></li>
+                </ul>
+            </div>
+            
+        	<div class="section_cont maxmar">
+        		<form action="list" method="get">
+            		<div class="pad">
+            			<%for(item in fieldList){
+                			if(item.is_search == "1") {%>
+             			<label>${item.column_comment}：<input name="${item.column_name}" value="\${${item.column_name} }"/></label>
+                		<%}}%>
+	            		<a href="#;" class="bottom" onclick="\$('form').submit()">搜索</a>
+            		</div>
+                </form>
+                <table>
+                	<tr>
+                		<%for(item in fieldList){
+                			if((item.is_show_list == null || item.is_show_list == "1") && item.column_name != pri.column_name) {%>
+             			<th width="${100 / fieldList.~size}%">${item.column_comment}</th>
+                		<%}}%>
+                		
+                    	<th width="${100 / fieldList.~size}%">操作</th>
+                    </tr>
+                    <c:forEach items="\${list}" var="item" varStatus="status">
+	                	<tr>
+	                		<%for(item in fieldList){
+	                			if((item.is_show_list == null || item.is_show_list == "1") && item.column_name != pri.column_name) {%>
+	             			<td>\${item.${item.column_name}}</td>
+	                		<%}}%>
+	                    	
+	                    	<td>
+	                    		<a href="###" onclick="openWindow('编辑', 'updatePage?id=\${item.${pri.column_name} }', successFun)">编辑</a>
+	                    		<a href="###" onclick="del('\${item.${pri.column_name}}')">删除</a>
+	                    	</td>
+	                    </tr>
+                    </c:forEach>
+                </table>
+                 \${pagesInfo}
+            </div>
+        </div>
+    </div>
+<script type="text/javascript">
+function successFun(index) {
+	save(function() {
+   		showSuccessMsg("保存成功！");
+   		layer.close(index);
+   		location.reload();
+   	});
+}
+
+function del(id) {
+	layer.confirm("确认删除？", {
+		title: '系统提示',
+		area: ['350px', '180px'],
+	    btn: ['确认','取消'] //按钮
+	}, function(){
+		$.post("delete", {id:id}, function() {
+		    showSuccessMsg('删除成功！');
+		    window.location.reload();
+		})
+	});	
+}
+</script>	
+</body>
+</html>

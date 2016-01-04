@@ -1,0 +1,42 @@
+\<%@ page language="java" pageEncoding="utf-8"%>
+\<%@ include file="../header.jsp" %>
+<div class="addpage_content">
+<form action="###" id="fm">
+<table>
+	<%for(item in addFieldList){%>
+	<% if(itemLP.index % 2 == 1) println("	<tr>");%>
+		<th>${item.column_comment}：</th>
+		<td><input name="${item.column_name}" <%if(item.is_nullable == 'NO') print("class='required'");%>></td>
+	<% if(itemLP.index % 2 == 0) println("	</tr>");%>
+	<%}%>
+	<% if(addFieldList.~size % 2 != 0)  {%>
+		<th></th>
+		<td></td>
+	<tr>
+	<%}%>
+</table>
+</form>
+</div>
+
+<script type="text/javascript">
+top.window.save = function(successFunc) {
+	if(tool.validate("#fm") == false) {
+		return;
+	}
+	
+	var param = {};
+	<%for(item in addFieldList){%>
+	param.${item.column_name} = $(":input[name='${item.column_name}']").val();
+	<%}%>
+	
+	$.post("add", param, function(data) {
+		if(data.result == 'success') {
+			if(successFunc) {
+				successFunc();
+			}
+		}	
+	});
+}
+</script>
+</body>
+</html>
