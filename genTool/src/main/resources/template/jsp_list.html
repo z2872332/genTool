@@ -20,7 +20,7 @@
                 			if(item.is_search == "1") {%>
              			<label>${item.column_comment}：<input name="${item.column_name}" value="\${${item.column_name} }"/></label>
                 		<%}}%>
-	            		<a href="#;" class="bottom" onclick="\$('form').submit()">搜索</a>
+	            		<a href="###" class="bottom" onclick="goSearch()">搜索</a>
             		</div>
                 </form>
                 <table>
@@ -51,6 +51,16 @@
         </div>
     </div>
 <script type="text/javascript">
+function goSearch() {
+	//去掉值为空字符串的input，避免后台Integer参数把空值转成0
+	$("form :input[name]").each(function() {
+		if($(this).val() == "") {
+			$(this).removeAttr("name");
+		}
+	});
+	$("form").submit();
+}
+
 function successFun(index) {
 	save(function() {
    		showSuccessMsg("保存成功！");

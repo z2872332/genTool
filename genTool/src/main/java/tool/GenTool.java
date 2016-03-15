@@ -21,6 +21,10 @@ import org.beetl.core.resource.ClasspathResourceLoader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * 代码生成工具（参考：http://note.youdao.com/share/?id=45c90ddb99a119aa31be157363511ebe&type=note）
+ * @author 钟世云
+ */
 public class GenTool {
 	public static final String url = "jdbc:mysql://192.168.100.98:3306/information_schema";
 	public static final String user = "jiwudev";
@@ -258,10 +262,10 @@ public class GenTool {
     	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     	tableName = String.valueOf(br.readLine());*/
 		GenTool t = new GenTool(tableName);
-		/*t.genEntity();
+		t.genEntity();
 		t.genDao();
 		t.genIManager();
-		t.genManagerImpl();*/
+		t.genManagerImpl();
 		t.genController();
 		t.genJspList();
 		t.genJspAdd();
